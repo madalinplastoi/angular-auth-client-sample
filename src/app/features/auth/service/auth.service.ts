@@ -1,19 +1,19 @@
-import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { Router } from '@angular/router';
+import {HttpClient} from '@angular/common/http';
+import {Injectable} from '@angular/core';
+import {Router} from '@angular/router';
 import {
   FacebookLoginProvider,
   GoogleLoginProvider,
   SocialAuthService,
 } from 'angularx-social-login';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { mergeMap, take, tap } from 'rxjs/operators';
-import { environment } from 'src/environments/environment';
+import {BehaviorSubject, Observable} from 'rxjs';
+import {mergeMap, take, tap} from 'rxjs/operators';
+import {environment} from 'src/environments/environment';
 import Swal from 'sweetalert2';
-import { ErrorDialogInterceptor } from '../../../core/interceptor/error-dialog.interceptor';
-import { SubscriptionService } from '../../user/service/subscription.service';
-import { AuthTokenInterceptor } from '../interceptor/auth-token.interceptor';
-import { AppleLoginProvider } from '../provider/apple-login.provider';
+import {ErrorDialogInterceptor} from '../../../core/interceptor/error-dialog.interceptor';
+import {SubscriptionService} from '../../user/service/subscription.service';
+import {AuthTokenInterceptor} from '../interceptor/auth-token.interceptor';
+import {AppleLoginProvider} from '../provider/apple-login.provider';
 
 export interface TokenResponse {
   access_token: string;
@@ -29,7 +29,7 @@ export interface User {
   isSocial: boolean;
 }
 
-const { api } = environment;
+const {api} = environment;
 
 @Injectable({
   providedIn: 'root',
@@ -50,7 +50,8 @@ export class AuthService {
     private socialService: SocialAuthService,
     private router: Router,
     private subscriptionService: SubscriptionService,
-  ) {}
+  ) {
+  }
 
   login(user: Partial<User>) {
     return this.http
@@ -67,6 +68,7 @@ export class AuthService {
   }
 
   loginWithGoogle() {
+    debugger;
     return this.loginWith(GoogleLoginProvider.PROVIDER_ID, {
       scope: 'profile email',
     });
@@ -79,6 +81,7 @@ export class AuthService {
   }
 
   handleSocialLogin(method: () => Promise<Observable<User>>) {
+    debugger;
     return new Promise<void>(async (resolve, reject) => {
       try {
         const observer = await method();
@@ -107,11 +110,13 @@ export class AuthService {
   }
 
   private async loginWith(providerId: string, options?: any) {
+    debugger;
+    var url = `${api}/auth/${this.getProviderUri(providerId)}-login`;
     const user = await this.socialService.signIn(providerId);
 
     return this.http
       .post<TokenResponse>(
-        `${api}/auth/${this.getProviderUri(providerId)}-login`,
+        url,
         {
           name: user.name,
           accessToken: user.authToken,

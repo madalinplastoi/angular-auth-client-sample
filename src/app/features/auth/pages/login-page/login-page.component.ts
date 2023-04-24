@@ -83,6 +83,7 @@ export class LoginPageComponent {
 
     this.loading = true;
 
+    debugger;
     try {
       await this.authService.handleSocialLogin(() =>
         this.authService.loginWithGoogle(),
